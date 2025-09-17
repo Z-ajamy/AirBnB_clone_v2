@@ -92,6 +92,32 @@ class HBNBCommand(cmd.Cmd):
             print('(hbnb) ', end='')
         return stop
 
+    @staticmethod
+    def _parse(args=""):
+        dic = {}
+        args = args.split()
+        for arg in args:
+            if arg.count("=") != 1:
+                continue
+            key, val = arg.split('=')
+            if val[0] == "\"" and val[-1] == "\"":
+                val = val[1:-1]
+                val = val.replace("_", " ")
+            elif "." in val:
+                try:
+                    val = float(val)
+                except ValueError:
+                    continue
+            else:
+                try:
+                    val = int(val)
+                except Exception:
+                    continue
+            dic[key] = val
+        return dic
+
+
+
     def do_quit(self, command):
         """ Method to exit the HBNB console"""
         exit()
@@ -118,13 +144,20 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        args = args.split(maxsplit=1)
+        type_obj = args[0]
+        if type_obj not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        addition_att_dic = {}
+        try:
+           addition_att_dic = HBNBCommand._parse(args[1]) 
+        except IndexError:
+            pass
+        new_instance = HBNBCommand.classes[type_obj]()
+        new_instance.__dict__.update(addition_att_dic)
         storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
