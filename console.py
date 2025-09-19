@@ -154,8 +154,7 @@ class HBNBCommand(cmd.Cmd):
            addition_att_dic = HBNBCommand._parse(args[1]) 
         except IndexError:
             pass
-        new_instance = HBNBCommand.classes[type_obj]()
-        new_instance.__dict__.update(addition_att_dic)
+        new_instance = HBNBCommand.classes[type_obj](**addition_att_dic)
         storage.save()
         print(new_instance.id)
 
