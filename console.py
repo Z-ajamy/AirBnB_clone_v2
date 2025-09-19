@@ -155,7 +155,7 @@ class HBNBCommand(cmd.Cmd):
         except IndexError:
             pass
         new_instance = HBNBCommand.classes[type_obj](**addition_att_dic)
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
 
     def help_create(self):
