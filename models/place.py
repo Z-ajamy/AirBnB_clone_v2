@@ -1,41 +1,92 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
+"""
+Place Module for HBNB project
+Defines the Place class and the place_amenity association table.
+"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, INTEGER, FLOAT
+from sqlalchemy import Table, Column, String, ForeignKey, INTEGER, FLOAT
 from sqlalchemy.orm import relationship
 from os import getenv
 
+# --- Association Table for Many-to-Many relationship ---
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False)
+                     )
+
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    """
+    A class to represent a place with various attributes and relationships.
+    """
     __tablename__ = "places"
 
-    city_id = Column(String(60),ForeignKey("cities.id") , nullable=False)
-    user_id = Column(String(60),ForeignKey("users.id") , nullable=False)
+    # --- Columns Definition for DBStorage ---
+    city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
+    user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = Column(String(128), nullable=False)
-    description = Column(String(1024))
+    description = Column(String(1024), nullable=True)
     number_rooms = Column(INTEGER, nullable=False, default=0)
     number_bathrooms = Column(INTEGER, nullable=False, default=0)
     max_guest = Column(INTEGER, nullable=False, default=0)
     price_by_night = Column(INTEGER, nullable=False, default=0)
-    latitude = Column(FLOAT)
-    longitude = Column(FLOAT)
-    amenity_ids = []
+    latitude = Column(FLOAT, nullable=True)
+    longitude = Column(FLOAT, nullable=True)
 
-    cities = relationship("City", back_populates="places")
+    # --- Relationships for DBStorage (One-to-Many) ---
     user = relationship("User", back_populates="places")
+    cities = relationship("City", back_populates="places")
 
-    if getenv("HBNB_TYPE_STORAGE") == "file":
-        @properties
-        def reviews(self):
-            from models import storage
-            from models.review import Review 
-            review_list = []
-            dic_of_all_reviews = storage.all(Review)
-            for city in dic_of_all_reviews.values():
-                if self.id == review.place_id:
-                    review_list.append(city)
-            return review_list
+    # --- Attribute for FileStorage Only ---
+    if getenv('HBNB_TYPE_STORAGE') != 'db':
+        amenity_ids = []
+
+    # --- Conditional Relationship for 'reviews' (One-to-Many) ---
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        reviews = relationship("Review", back_populates="place",
+                               cascade="all, delete, delete-orphan")
     else:
-        reviews = relationship("Review", back_populates="place", cascade="all, delete, delete-orphan")
+        @property
+        def reviews(self):
+            """
+            Returns a list of Review instances for FileStorage.
+            """
+            from models import storage
+            from models.review import Review
+            review_list = []
+            for review in storage.all(Review).values():
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
 
+    # --- Conditional Relationship for 'amenities' (Many-to-Many) ---
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False,
+                                 back_populates="place_amenities")
+    else:
+        @property
+        def amenities(self):
+            """
+            Returns a list of Amenity instances for FileStorage.
+            """
+            from models import storage
+            from models.amenity import Amenity
+            amenity_list = []
+            for amenity in storage.all(Amenity).values():
+                if amenity.id in self.amenity_ids:
+                    amenity_list.append(amenity)
+            return amenity_list
+
+        @amenities.setter
+        def amenities(self, obj):
+            """
+            Handles appending an Amenity's ID for FileStorage.
+            """
+            from models.amenity import Amenity
+            if isinstance(obj, Amenity):
+                self.amenity_ids.append(obj.id)
