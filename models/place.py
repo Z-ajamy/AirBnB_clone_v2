@@ -16,8 +16,8 @@ class Place(BaseModel, Base):
     number_bathrooms = Column(INTEGER, nullable=False, default=0)
     max_guest = Column(INTEGER, nullable=False, default=0)
     price_by_night = Column(INTEGER, nullable=False, default=0)
-    latitude = Column(FLOAT, default=0)
-    longitude = Column(FLOAT, default=0)
+    latitude = Column(FLOAT)
+    longitude = Column(FLOAT)
     amenity_ids = []
 
     cities = relationship("City", back_populates="places")
