@@ -3,6 +3,8 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
+from os import getenv
+
 
 class City(BaseModel, Base):
     """ The city class, contains state ID and name """
@@ -10,5 +12,6 @@ class City(BaseModel, Base):
     state_id = Column(String(60), ForeignKey("states.id"), nullable=False)
     name = Column(String(128), nullable=False)
 
-    state = relationship("State", back_populates="cities")
-    places = relationship("Place", back_populates="cities", cascade="all, delete, delete-orphan")
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        state = relationship("State", back_populates="cities")
+        places = relationship("Place", back_populates="cities", cascade="all, delete, delete-orphan")
