@@ -136,5 +136,6 @@ server {
 #" > /etc/nginx/sites-available/default
 
 
+
 # Restart the Nginx service to apply the new configuration
 service nginx restart
