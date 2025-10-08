@@ -110,7 +110,7 @@ server {
     #
     # include snippets/snakeoil.conf;
 
-    add_header X-Served-By $HOSTNAME
+    add_header X-Served-By $HOSTNAME;
     root /var/www/html;
 
     # Add index.php to the list if you are using PHP
@@ -121,7 +121,7 @@ server {
     location /hbnb_static {
         # First attempt to serve request as file, then
         # as directory, then fall back to displaying a 404.
-        alias /data/web_static/current
+        alias /data/web_static/current;
         index index.html index.htm;
         try_files $uri $uri/ =404;
     }
