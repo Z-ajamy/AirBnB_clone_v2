@@ -123,7 +123,6 @@ server {
         # as directory, then fall back to displaying a 404.
         alias /data/web_static/current;
         index index.html index.htm;
-        try_files $uri $uri/ =404;
     }
 
     # deny access to .htaccess files, if Apache's document root
