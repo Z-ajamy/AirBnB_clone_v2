@@ -50,6 +50,4 @@ server {
 #" > /etc/nginx/sites-available/default
 
 
-# Restart the Nginx service to apply the new configuration
-# Uses systemctl for service management on systemd-based systems
-sudo systemctl restart nginx
+service nginx restart
