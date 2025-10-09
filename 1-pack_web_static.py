@@ -33,7 +33,6 @@ Archive Format:
     Location: versions/web_static_YYYYMMDDHHMMSS.tgz
 """
 from fabric.api import *
-from fabric.contrib.files import exists
 
 import os
 
