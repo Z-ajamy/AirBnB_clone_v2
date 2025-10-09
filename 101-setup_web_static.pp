@@ -124,6 +124,8 @@ file { '/data/web_static/current':
   ensure  => link,
   target  => '/data/web_static/releases/test',
   force   => true,
+  owner   => 'ubuntu',
+  group   => 'ubuntu',
   require => File['/data/web_static/releases/test'],
 }
 
