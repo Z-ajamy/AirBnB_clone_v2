@@ -31,6 +31,7 @@ def hbnb():
 @app.route("/c/<text>", strict_slashes=False)
 def hbnb(text=""):
     """Displays 'HBNB'"""
+    text = text.replace("_", " ")
     return f"HBNB{text}"
 
 if __name__ == "__main__":
