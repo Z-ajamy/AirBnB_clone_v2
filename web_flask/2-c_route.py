@@ -7,7 +7,6 @@ Routes:
     /hbnb: Displays 'HBNB'.
     /c/<text>: Displays 'C' followed by the value of <text>.
 """
-
 from flask import Flask
 
 app = Flask(__name__)
@@ -15,23 +14,22 @@ app = Flask(__name__)
 
 @app.route("/", strict_slashes=False)
 def hello_hbnb():
-    """Displays 'Hello HBNB!'"""
+    """Displays 'Hello HBNB!'."""
     return "Hello HBNB!"
-
 
 
 @app.route("/hbnb", strict_slashes=False)
 def hbnb():
-    """Displays 'HBNB'"""
+    """Displays 'HBNB'."""
     return "HBNB"
 
 
-
 @app.route("/c/<text>", strict_slashes=False)
-def hbnb(text=""):
+def c(text):
     """Displays 'C' followed by the value of <text>."""
     text = text.replace("_", " ")
-    return f"HBNB{text}"
+    return "C {}".format(text)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
