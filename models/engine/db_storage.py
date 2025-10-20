@@ -81,4 +81,8 @@ class DBStorage:
         Sec = sessionmaker(bind=self.__engine)
         Session = scoped_session(Sec)
         self.__session = Session()
-
+    
+    def close(self):
+        """close the Session
+        """
+        self.__session.close()
