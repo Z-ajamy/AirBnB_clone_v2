@@ -16,7 +16,7 @@ place_amenity = Table('place_amenity', Base.metadata,
                       Column('amenity_id', String(60),
                              ForeignKey('amenities.id'),
                              primary_key=True, nullable=False)
-                     )
+                      )
 
 
 class Place(BaseModel, Base):
@@ -25,7 +25,7 @@ class Place(BaseModel, Base):
     """
     __tablename__ = "places"
 
-    # --- Columns Definition for DBStorage ---
+    # --- Columns Definition ---
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = Column(String(128), nullable=False)
@@ -37,19 +37,29 @@ class Place(BaseModel, Base):
     latitude = Column(FLOAT, nullable=True)
     longitude = Column(FLOAT, nullable=True)
 
-    # --- Relationships for DBStorage (One-to-Many) ---
-    user = relationship("User", back_populates="places")
-    cities = relationship("City", back_populates="places")
-
     # --- Attribute for FileStorage Only ---
     if getenv('HBNB_TYPE_STORAGE') != 'db':
         amenity_ids = []
 
-    # --- Conditional Relationship for 'reviews' (One-to-Many) ---
+    # --- Conditional Relationships (DBStorage) vs Getters (FileStorage) ---
     if getenv('HBNB_TYPE_STORAGE') == 'db':
+        # --- Relationships for DBStorage ---
+        
+        # (Fix 1: Moved inside 'if' block)
+        user = relationship("User", back_populates="places")
+        
+        # (Fix 1: Moved inside 'if' block | Fix 2: Renamed to 'city')
+        city = relationship("City", back_populates="places")
+
         reviews = relationship("Review", back_populates="place",
                                cascade="all, delete, delete-orphan")
+        
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False,
+                                 back_populates="place_amenities")
     else:
+        # --- Getters/Setters for FileStorage ---
+
         @property
         def reviews(self):
             """
@@ -63,12 +73,6 @@ class Place(BaseModel, Base):
                     review_list.append(review)
             return review_list
 
-    # --- Conditional Relationship for 'amenities' (Many-to-Many) ---
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
-        amenities = relationship("Amenity", secondary=place_amenity,
-                                 viewonly=False,
-                                 back_populates="place_amenities")
-    else:
         @property
         def amenities(self):
             """
