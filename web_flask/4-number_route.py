@@ -46,5 +46,16 @@ def python(text="is cool"):
     return "Python {}".format(text)
 
 
+
+@app.route("/number/<int:n>", strict_slashes=False)
+def n(n):
+    """Displays n is a number.
+
+    Replaces any underscores in <n> with slashes.
+    """
+    return "{} is a number".format(n)
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
