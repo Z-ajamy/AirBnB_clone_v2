@@ -99,3 +99,9 @@ button {
 button:hover {
 	opacity: 90%;
 }
+
+
+.filters .popover {
+    max-height: 300px;
+    overflow-y: scroll;
+}
