@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from os import getenv
 
 
-class Review(BaseModel, Base):
+class Review(BaseModel):
     """ Review classto store review information """
     __tablename__ = "reviews"
     place_id = Column(String(60),ForeignKey("places.id") , nullable=False)

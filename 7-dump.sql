@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: hbnb_dev_db
 -- ------------------------------------------------------
--- Server version	5.7.8-rc
+-- Server version       5.7.8-rc
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -19,7 +19,7 @@
 DROP DATABASE IF EXISTS hbnb_dev_db;
 
 -- Create database + user if doesn't exist
-CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
+CREATE DATABASE IF NOT EXISTS hbnb_dev_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS 'hbnb_dev'@'localhost';
 SET PASSWORD FOR 'hbnb_dev'@'localhost' = 'hbnb_dev_pwd';
 GRANT ALL ON hbnb_dev_db.* TO 'hbnb_dev'@'localhost';
@@ -44,7 +44,7 @@ CREATE TABLE `cities` (
   PRIMARY KEY (`id`),
   KEY `state_id` (`state_id`),
   CONSTRAINT `cities_ibfk_1` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +70,7 @@ CREATE TABLE `states` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

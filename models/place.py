@@ -19,7 +19,7 @@ place_amenity = Table('place_amenity', Base.metadata,
                       )
 
 
-class Place(BaseModel, Base):
+class Place(BaseModel):
     """
     A class to represent a place with various attributes and relationships.
     """
